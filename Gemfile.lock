@@ -1,0 +1,48 @@
+GIT
+  remote: git://github.com/ysbaddaden/minitest-colorize.git
+  revision: 81f2dd6aee81c83debc31572608fa89d6d9e1a19
+  specs:
+    minitest-colorize (0.0.6.pre)
+      minitest (>= 5.2)
+
+PATH
+  remote: .
+  specs:
+    calliper (0.0.1)
+      selenium-webdriver
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    childprocess (0.4.0)
+      ffi (~> 1.0, >= 1.0.11)
+    ffi (1.9.3)
+    json (1.8.1)
+    minitest (5.2.2)
+    multi_json (1.8.4)
+    rack (1.5.2)
+    rack-protection (1.5.2)
+      rack
+    rubyzip (1.1.0)
+    selenium-webdriver (2.39.0)
+      childprocess (>= 0.2.5)
+      multi_json (~> 1.0)
+      rubyzip (~> 1.0)
+      websocket (~> 1.0.4)
+    sinatra (1.4.4)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    tilt (1.4.1)
+    websocket (1.0.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  calliper!
+  json
+  minitest
+  minitest-colorize!
+  selenium-webdriver
+  sinatra

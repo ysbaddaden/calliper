@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sample">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Calliper Sample Application</title>
+    <script src="/javascripts/angular.js"></script>
+    <script src="/javascripts/application.js"></script>
+  </head>
+  <body>
+
+    <div ng-controller="NotificationListCtrl">
+      <h1>Notifications:</h1>
+
+      <button class="toggle-notifications" ng-click="toggleNotifications()">
+        Toggle Notifications
+      </button>
+
+      <ul ng-if="notifications" class="notification-list">
+        <li ng-repeat="notification in notifications" class="notification">
+          <span class="notification-id">{{notification.id}}</span>:
+          <span class="notification-message">{{notification.message}}</span>
+        </li>
+      </ul>
+    </div>
+
+  </body>
+</html>
