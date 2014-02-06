@@ -23,6 +23,7 @@ GEM
     rack (1.5.2)
     rack-protection (1.5.2)
       rack
+    rake (10.1.1)
     rubyzip (1.1.0)
     selenium-webdriver (2.39.0)
       childprocess (>= 0.2.5)
@@ -44,5 +45,6 @@ DEPENDENCIES
   json
   minitest
   minitest-colorize!
+  rake
   selenium-webdriver
   sinatra
