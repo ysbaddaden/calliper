@@ -7,10 +7,15 @@ module Calliper
     @driver ||= if local_server_running?
                   Selenium::WebDriver.for(:remote,
                     url: "http://localhost:4444/wd/hub",
-                    desired_capabilities: { browserName: Config.browser_name }
+                    desired_capabilities: { browserName: Config.driver.to_s }
+                  )
+                elsif Config.driver == :remote
+                  Selenium::WebDriver.for(:remote,
+                    url: Config.remote_url,
+                    desired_capabilities: Config.capabilities
                   )
                 else
-                  Selenium::WebDriver.for(:firefox)
+                  Selenium::WebDriver.for(Config.driver)
                 end
   end
 

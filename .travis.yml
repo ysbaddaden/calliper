@@ -1,0 +1,16 @@
+language: ruby
+
+script: bundle exec rake test
+
+rvm:
+  - 2.0.0
+  - 2.1.0
+
+env:
+  global:
+    SAUCE_USERNAME: ysbaddaden
+    secure: AAome47ogd5kWtOcB0JI5SYgukY0dmP5+pUtUopfzEDOwzWXX4627PS5RHFTm4Gxmkm8Zkyrtl4t0GVhZO0nFCy+sHXB4Wj4veK/dcLp/n9d5DylPsh6D3rEWBw/z1kX/bHvNcazahZ0ProP5X9KoXA9PfkiygYDuck4qidTctw=
+
+addons:
+  sauce_connect: true
+

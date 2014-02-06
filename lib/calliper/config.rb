@@ -6,7 +6,10 @@ module Calliper
     attr_accessor :base_host
     attr_accessor :base_url
     attr_accessor :browser_name
+    attr_accessor :capabilities
+    attr_accessor :driver
     attr_accessor :port
+    attr_accessor :remote_url
 
     def base_url
       @base_url ||= if base_host
