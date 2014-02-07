@@ -28,6 +28,7 @@ module Calliper
 
     def method_missing(method_name, *args)
       if driver.respond_to?(method_name)
+        Calliper.wait_for_angular
         driver.__send__(method_name, *args)
       else
         super

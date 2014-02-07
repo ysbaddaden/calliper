@@ -1,22 +1,17 @@
 require 'socket'
+require 'calliper/client_side_scripts'
 
 module Calliper
-  # FIXME: Only firefox quits correctly when used directly. There are no
-  #   problems when using a Selenium Server.
   def self.driver
-    @driver ||= if local_server_running?
-                  Selenium::WebDriver.for(:remote,
-                    url: "http://localhost:4444/wd/hub",
-                    desired_capabilities: { browserName: Config.driver.to_s }
-                  )
-                elsif Config.driver == :remote
-                  Selenium::WebDriver.for(:remote,
-                    url: Config.remote_url,
-                    desired_capabilities: Config.capabilities
-                  )
-                else
-                  Selenium::WebDriver.for(Config.driver ? Config.driver.to_sym : :firefox)
-                end
+    @driver ||= begin
+      driver = create_webdriver_instance
+      driver.manage.timeouts.script_timeout = 2
+      driver
+    end
+  end
+
+  def self.driver?
+    !!@driver
   end
 
   def self.local_server_running?
@@ -28,9 +23,25 @@ module Calliper
     end
   end
 
-  def self.driver?
-    !!@driver
-  end
+  private
+
+    # FIXME: Only firefox quits correctly when used directly. There are no
+    #   problems when using a Selenium Server.
+    def self.create_webdriver_instance
+      if local_server_running?
+        Selenium::WebDriver.for(:remote,
+          url: "http://localhost:4444/wd/hub",
+          desired_capabilities: { browserName: Config.driver.to_s }
+        )
+      elsif Config.driver == :remote
+        Selenium::WebDriver.for(:remote,
+          url: Config.remote_url,
+          desired_capabilities: Config.capabilities
+        )
+      else
+        Selenium::WebDriver.for(Config.driver ? Config.driver.to_sym : :firefox)
+      end
+    end
 end
 
 # We're hacking our way into WebDriver locators in order to emulate some
@@ -43,6 +54,7 @@ module Selenium::WebDriver::SearchContext
     alias_method "#{name}_without_angular", name
 
     define_method name do |*args|
+      Calliper.wait_for_angular
       __send__("#{name}_without_angular", *angular_custom_locator(args))
     end
   end
