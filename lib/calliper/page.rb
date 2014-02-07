@@ -8,11 +8,11 @@ module Calliper
       page
     end
 
-    def get(path, sync: true)
+    def get(path, options = {})
       url = path =~ %r(^http://) ? path : "#{base_url}#{path}"
       driver.get(url)
 
-      if sync
+      if options[:sync].nil? || options[:sync]
         wait = Selenium::WebDriver::Wait.new(timeout: 10)
         wait.until { driver.find_element(css: "[ng-app]") }
       end
