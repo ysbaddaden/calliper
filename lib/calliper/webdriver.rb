@@ -39,7 +39,7 @@ end
 # FIXME: use real locators that use protractor's client-side finders:
 #   https://github.com/angular/protractor/blob/master/lib/clientsidescripts.js
 module Selenium::WebDriver::SearchContext
-  %i(find_element find_elements).each do |name|
+  %w(find_element find_elements).each do |name|
     alias_method "#{name}_without_angular", name
 
     define_method name do |*args|

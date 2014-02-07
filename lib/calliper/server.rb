@@ -1,3 +1,4 @@
+require 'timeout'
 require 'calliper/config'
 
 module Calliper
