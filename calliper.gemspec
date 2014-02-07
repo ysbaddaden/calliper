@@ -23,5 +23,4 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'json'
   gem.add_development_dependency 'sinatra'
   gem.add_development_dependency 'minitest'
-  gem.add_development_dependency 'puma'
 end
