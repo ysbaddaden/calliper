@@ -3,15 +3,24 @@ require 'calliper/config'
 require 'calliper/page'
 require 'calliper/server'
 require 'calliper/webdriver'
-require 'calliper/rails' if defined?(Rails)
 require 'calliper/minitest' if defined?(Minitest)
 
 module Calliper
-  def self.server?
-    false
+  def self.enable!
+    application = Config.application || (::Rails.application if defined?(::Rails))
+    raise "No application configured" unless application
+
+    logger = ::Rails.logger if defined?(::Rails)
+
+    @server = Server.new(application, logger: logger)
+    @server.start
   end
 
-  def self.enable!
-    server.start
+  def self.server
+    @server
+  end
+
+  def self.server?
+    !!@server
   end
 end

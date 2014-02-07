@@ -1,23 +1,15 @@
 require 'calliper/config'
 
 module Calliper
-  def self.server
-    @server ||= Server.new(Config.application)
-  end
-
-  def self.server?
-    !!@server
-  end
-
   # NOTE: Borrows code from the fantastic Teaspoon gem:
   #   http://github.com/modeset/teaspoon
   class Server
     attr_reader :application, :port, :logger
 
-    def initialize(application, port = Config.port, logger = nil)
+    def initialize(application, options = {})
       @application = application
-      @port = port
-      @logger = logger
+      @port = options[:port] || Config.port
+      @logger = options[:logger]
     end
 
     def start
