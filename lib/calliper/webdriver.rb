@@ -1,8 +1,8 @@
 require 'socket'
 
 module Calliper
-  # TODO: connect to any remote server (eg: custom, saucelabs, browserstack)
-  # FIXME: only firefox quits correctly when used directly
+  # FIXME: Only firefox quits correctly when used directly. There are no
+  #   problems when using a Selenium Server.
   def self.driver
     @driver ||= if local_server_running?
                   Selenium::WebDriver.for(:remote,
@@ -15,7 +15,7 @@ module Calliper
                     desired_capabilities: Config.capabilities
                   )
                 else
-                  Selenium::WebDriver.for(Config.driver)
+                  Selenium::WebDriver.for(Config.driver ? Config.driver.to_sym : :firefox)
                 end
   end
 
