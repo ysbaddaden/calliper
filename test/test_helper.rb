@@ -5,7 +5,6 @@ require_relative 'sample/application'
 
 Calliper.setup do |config|
   config.application = SampleApplication
-  config.port = 3002
 
   if ENV['CI']
     config.driver = :remote

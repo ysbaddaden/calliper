@@ -8,7 +8,7 @@ module Calliper
 
     def initialize(application, options = {})
       @application = application
-      @port = options[:port] || Config.port
+      @port = options[:port] || Config.port || find_available_port
       @logger = options[:logger]
     end
 
@@ -48,5 +48,14 @@ module Calliper
     def url
       "http://127.0.0.1:#{port}"
     end
+
+    private
+
+      def find_available_port
+        server = TCPServer.new('127.0.0.1', 0)
+        server.addr[1]
+      ensure
+        server.close if server
+      end
   end
 end
