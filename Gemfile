@@ -8,6 +8,12 @@ group :test do
   gem 'minitest-colorize', github: 'ysbaddaden/minitest-colorize'
 end
 
+platform :rbx do
+  gem 'rubysl-timeout'
+  gem 'rubysl-net-http'
+  gem 'puma'
+end
+
 gem 'selenium-webdriver'
 gem 'calliper', path: '.'
 

@@ -18,6 +18,10 @@ Gem::Specification.new do |gem|
   gem.signing_key   = File.expand_path('~/.ssh/gem-private_key.pem') if $0 =~ /gem\z/
 
   gem.add_dependency 'selenium-webdriver'
-  gem.add_development_dependency 'rack'
+
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'json'
+  gem.add_development_dependency 'sinatra'
   gem.add_development_dependency 'minitest'
+  gem.add_development_dependency 'puma'
 end
