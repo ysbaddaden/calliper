@@ -5,7 +5,7 @@ module Calliper
   def self.driver
     @driver ||= begin
       driver = create_webdriver_instance
-      driver.manage.timeouts.script_timeout = 2
+      driver.manage.timeouts.script_timeout = 11
       driver
     end
   end
@@ -44,45 +44,33 @@ module Calliper
     end
 end
 
-# We're hacking our way into WebDriver locators in order to emulate some
-# nice Protractor locators.
-#
-# FIXME: use real locators that use protractor's client-side finders:
-#   https://github.com/angular/protractor/blob/master/lib/clientsidescripts.js
+# NOTE: hacking into WebDriver to implement Protractor's locators
 module Selenium::WebDriver::SearchContext
   %w(find_element find_elements).each do |name|
     alias_method "#{name}_without_angular", name
 
     define_method name do |*args|
       Calliper.wait_for_angular
-      __send__("#{name}_without_angular", *angular_custom_locator(args))
+      how, what = angular_parse_search_arguments(args)
+
+      if script = Calliper::ClientSideScripts[:"find_by_#{how}"]
+        context = is_a?(Selenium::WebDriver::Element) ? self : nil
+        Calliper.driver.execute_script(script, context, what)
+      else
+        __send__("#{name}_without_angular", *args)
+      end
     end
   end
 
   private
 
-    def angular_custom_locator(args)
-      case args.size
-      when 2
-        how, what = args
-      when 1
+    def angular_parse_search_arguments(args)
+      if args.size == 1
         how = args.first.keys.first
         what = args.first[how]
-      else
-        return args
-      end
-
-      case how
-      when :model
-        [:css, angular_prefixes.map { |prefix| "[#{prefix}model='#{what}']"  }.join(", ")]
-      when :repeater
-        [:css, angular_prefixes.map { |prefix| "[#{prefix}repeat^='#{what}']"  }.join(", ")]
+        [how, what]
       else
         args
       end
-    end
-
-    def angular_prefixes
-      @angular_prefixes ||= %w(ng- ng_ data-ng- x-ng- ng\\:)
     end
 end
