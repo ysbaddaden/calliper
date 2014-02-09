@@ -21,3 +21,12 @@ Calliper.setup do |config|
 end
 
 Calliper.enable!
+
+class Minitest::Test
+  def assert_difference(counter, difference = 1, message = nil)
+    count = counter.call
+    yield
+    assert_equal count + difference, counter.call,
+      message || "Expected #{counter} to change by #{difference}"
+  end
+end

@@ -1,48 +1,51 @@
 require 'test_helper'
+require_relative 'sample_page'
 
-class NotificationsPage < Calliper::Page
-  def get
-    super "/"
-  end
-
-  def toggle
-    find_element(:css, '.toggle-notifications').click
-  end
-
-  def list
-    find_element(:css, '.notification-list')
-  end
-
-  def notifications
-    list.find_elements(:repeater, 'notification in notifications')
-  end
-end
-
-class NotificationsTest < Minitest::Test
+class SampleApplicationTest < Minitest::Test
   def setup
-    @page = NotificationsPage.get
+    @page = SamplePage.get
+    @page.toggle_notifications
   end
 
-  def test_toggle_button
-    refute @page.list.is_visible?, "it should be hidden by default"
-
-    @page.toggle
-    assert @page.list.is_visible?, "it should be visible now"
-
-    @page.toggle
-    refute @page.list.is_visible?, "it should be hidden now"
+  def teardown
+    SampleApplication.reset!
   end
 
-  def test_toggle_button
-    @page.toggle
+  def test_toggle
+    assert @page.list_visible?
+    @page.toggle_notifications
+    refute @page.list_visible?
+  end
+
+  def test_repeater_locator
     assert_equal 20, @page.notifications.count
+    assert_equal 2, @page.messages.count
+  end
 
-    assert_equal "20",
-      @page.notifications.first.find_element(:css, '.notification-id').text
-    assert_equal "1",
-      @page.notifications.last.find_element(:css, '.notification-id').text
-
-    assert_equal "this is notification #1",
+  def test_chaining_repeater_locator
+    assert_equal '1',  @page.notifications.last.find_element(:css, '.notification-id').text
+    assert_equal 'this is notification #1',
       @page.notifications.last.find_element(:css, '.notification-message').text
+  end
+
+  def test_binding_locator
+    assert_equal (1..20).map(&:to_s).reverse,
+      @page.list.find_elements(:binding, 'notification.id').map(&:text)
+
+    assert_equal (1..2).map(&:to_s).reverse,
+      @page.find_elements(:binding, 'message.id').map(&:text)
+
+    assert_equal 'first message',
+      @page.messages.last.find_element(:binding, 'message.body').text
+  end
+
+  def test_model_locator
+    assert_difference -> { @page.messages.count } do
+      @page.message_form.find_element(model: 'message.body').send_keys('hey dude')
+      @page.message_form.find_element(css: 'input[type=submit]').click
+    end
+
+    assert_equal 'hey dude', @page.messages.first.find_element(:binding, 'message.body').text
+    assert_empty @page.find_element(:model, 'message.body').attribute('value')
   end
 end

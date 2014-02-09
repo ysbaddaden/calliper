@@ -8,8 +8,10 @@
   </head>
   <body>
 
-    <div ng-controller="NotificationListCtrl">
-      <h1>Notifications:</h1>
+    <h1>Sample Application</h1>
+
+    <div id="notifications" ng-controller="NotificationListCtrl">
+      <h2>Notifications:</h2>
 
       <button class="toggle-notifications" ng-click="toggleNotifications()">
         Toggle Notifications
@@ -21,6 +23,28 @@
           <span class="notification-message">{{notification.message}}</span>
         </li>
       </ul>
+    </div>
+
+    <div id="messages" ng-controller="MessageCtrl">
+      <h2>Messages:</h2>
+
+      <ul class="message-list">
+        <li ng-repeat="message in messages">
+          <span>{{message.id}}</span>:
+          <span>{{message.body}}</span>
+        </li>
+      </ul>
+
+      <form class="message" ng-submit="postMessage()">
+        <p class="field">
+          <label for="message_body">Your message:</label><br/>
+          <textarea id="message_body" ng-model="message.body"></textarea>
+        </p>
+
+        <p class="buttons">
+          <input type="submit" value="Post Message"/>
+        </p>
+      </form>
     </div>
 
   </body>
