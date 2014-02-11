@@ -11,3 +11,5 @@ for browser in $browsers; do
     bundle exec rake test BROWSER=$browser
     [ $? -ne 0 ] && exit 1
 done
+
+exit 0
