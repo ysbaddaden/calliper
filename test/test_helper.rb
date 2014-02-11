@@ -4,19 +4,29 @@ Bundler.require(:default, :test)
 require_relative 'sample/application'
 
 Calliper.setup do |config|
+  browser = ENV['BROWSER'] || :firefox
+
   config.application = SampleApplication
+  config.base_host = ENV['BASE_HOST']
+  config.capabilities = Selenium::WebDriver::Remote::Capabilities.__send__(browser)
 
   if ENV['CI']
     config.driver = :remote
     config.remote_url = "http://#{ENV['SAUCE_USERNAME']}:#{ENV['SAUCE_ACCESS_KEY']}@ondemand.saucelabs.com/wd/hub"
-    config.capabilities = {
-      'name' => 'Calliper',
-      'build' => ENV['TRAVIS_BUILD_NUMBER'],
-      'tunnel-identifier' => ENV['TRAVIS_JOB_NUMBER'],
-      'browserName' => ENV['BROWSER'] || 'firefox',
-    }
+
+    config.capabilities['name'] = 'Calliper'
+    config.capabilities['build'] = ENV['TRAVIS_BUILD_NUMBER']
+    config.capabilities['tunnel-identifier'] = ENV['TRAVIS_JOB_NUMBER']
+
+    if ENV['BROWSER'] == 'internet_explorer'
+      config.capabilities.platform = 'Windows 7'
+      config.capabilities.version = '9'
+    end
+  elsif ENV['REMOTE_URL']
+    config.driver = :remote
+    config.remote_url = ENV['REMOTE_URL']
   else
-    config.driver = (ENV['BROWSER'] || :firefox).to_sym
+    config.driver = browser.to_sym
   end
 end
 

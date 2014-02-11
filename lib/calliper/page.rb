@@ -8,7 +8,8 @@ module Calliper
       page
     end
 
-    def get(path, options = {})
+    def get(path, options = {}) # sync: true, timeout: 20
+      timeout = options[:timeout] || 20
       url = path =~ %r(^http://) ? path : "#{base_url}#{path}"
 
       # skips angular bootstrap
@@ -16,18 +17,15 @@ module Calliper
 
       # defers angular bootstrap
       driver.get('about:blank')
-      driver.execute_script <<-JAVASCRIPT
-        window.name = "NG_DEFER_BOOTSTRAP!" + window.name;
-        window.location.assign("#{url}");
-        JAVASCRIPT
+      driver.execute_script(
+        'window.name = "NG_DEFER_BOOTSTRAP!" + window.name;' <<
+        'window.location.assign("' + url + '");'
+      )
 
-      # waits for the page to be loaded
-      wait = Selenium::WebDriver::Wait.new(timeout: 0.3)
+      # waits for the page to be loaded and angular to be ready
+      wait = Selenium::WebDriver::Wait.new(timeout: timeout)
       wait.until { driver.current_url != 'about:blank' }
-
-      # waits for angular to be ready
-      success, message = driver.execute_async_script(ClientSideScripts[:test_for_angular], 10)
-      raise message unless success
+      wait.until { driver.execute_script(ClientSideScripts[:test_for_angular]) }
 
       # injects mocks and resumes bootstrap
       modules.each do |name, script|
