@@ -4,16 +4,17 @@ Bundler.require(:default, :test)
 require_relative 'sample/application'
 
 Calliper.setup do |config|
-  browser = ENV['BROWSER'] || :firefox
-
   config.application = SampleApplication
   config.base_host = ENV['BASE_HOST']
+
+  browser = ENV['BROWSER'] || :firefox
   config.capabilities = Selenium::WebDriver::Remote::Capabilities.__send__(browser)
 
-  if ENV['CI']
+  if ENV['SAUCELABS'].to_s != ""
+    config.port = 3001 # fixed for IE to access the app throught Connect
+
     config.driver = :remote
     config.remote_url = "http://#{ENV['SAUCE_USERNAME']}:#{ENV['SAUCE_ACCESS_KEY']}@ondemand.saucelabs.com/wd/hub"
-
     config.capabilities['name'] = 'Calliper'
     config.capabilities['build'] = ENV['TRAVIS_BUILD_NUMBER']
     config.capabilities['tunnel-identifier'] = ENV['TRAVIS_JOB_NUMBER']

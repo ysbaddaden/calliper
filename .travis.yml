@@ -10,4 +10,14 @@ env:
   global:
     - secure: "naP+5ZG38Ie1/QGxMfrI9kLnGPnqRbIuNw0rFebCOcqeKj9MadBSSQjOi7c0gZBmNaV+js01R9U7RClNFWqHY+tGDWWlYL4gGDT0I2vIgCmnjGnIprD+iuS7ry1tISKjTOn7nfDvVxppK7R2xpuFFjrQgLmYyloPJMacT/n5E9Q="
     - secure: "Q6wwGwwGfrKBEzoSwylLFjIKj8B5FNHoYEtEtivmHQYrqG+OyiL4YAOxFjpuaiWUJCYKeo6CWhTG9V0NVDgOZY54gxmJhqUpQCFZ53B1MylxANOykADOiXr5xHC9O2VBBF5OU1rkLL5fR8daA/pBOmoidXSD+Psn53ZWnReqZOc="
+  matrix:
+    - SAUCELABS=
+    - SAUCELABS=1
+
+matrix:
+  exclude:
+    - rvm: 2.0.0
+      env: SAUCELABS=
+    - rvm: 2.1.0
+      env: SAUCELABS=1
 
