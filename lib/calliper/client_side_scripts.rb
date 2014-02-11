@@ -16,6 +16,29 @@ module Calliper
     }
     JAVASCRIPT
 
+  ClientSideScripts[:test_for_angular] = <<-JAVASCRIPT
+    var attempts = arguments[0];
+    var callback = arguments[arguments.length - 1];
+    var check = function(n) {
+      try {
+        if (window.angular && window.angular.resumeBootstrap) {
+          callback([true, null]);
+        } else if (n < 1) {
+          if (window.angular) {
+            callback([false, 'angular never provided resumeBootstrap']);
+          } else {
+            callback([false, 'retries looking for angular exceeded']);
+          }
+        } else {
+          window.setTimeout(function() {check(n - 1)}, 1000);
+        }
+      } catch (e) {
+        callback([false, e]);
+      }
+    };
+    check(attempts);
+    JAVASCRIPT
+
   ClientSideScripts[:find_by_binding] = <<-JAVASCRIPT
     var using = arguments[0] || document;
     var binding = arguments[1];

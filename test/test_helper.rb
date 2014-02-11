@@ -29,4 +29,8 @@ class Minitest::Test
     assert_equal count + difference, counter.call,
       message || "Expected #{counter} to change by #{difference}"
   end
+
+  def refute_difference(counter, message = nil, &block)
+    assert_difference(counter, 0, message, &block)
+  end
 end

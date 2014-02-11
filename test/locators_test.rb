@@ -1,7 +1,7 @@
 require 'test_helper'
 require_relative 'sample_page'
 
-class SampleApplicationTest < Minitest::Test
+class LocatorsTest < Minitest::Test
   def setup
     @page = SamplePage.get
     @page.toggle_notifications
@@ -22,10 +22,11 @@ class SampleApplicationTest < Minitest::Test
     assert_equal 2, @page.messages.count
   end
 
-  def test_chaining_repeater_locator
-    assert_equal '1',  @page.notifications.last.find_element(:css, '.notification-id').text
+  def test_chaining
+    notification = @page.notifications.last
+    assert_equal '1', notification.find_element(:css, '.notification-id').text
     assert_equal 'this is notification #1',
-      @page.notifications.last.find_element(:css, '.notification-message').text
+      notification.find_element(:css, '.notification-message').text
   end
 
   def test_binding_locator
