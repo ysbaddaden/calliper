@@ -1,9 +1,10 @@
 #! /bin/sh
 
 browsers="firefox"
+SAUCELABS_SETUP_URL="https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh"
 
 if [ "$SAUCELABS" != "" ]; then
-    curl "https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh" | bash
+    curl "$SAUCELABS_SETUP_URL" | bash > /dev/null
     browsers="$browsers chrome internet_explorer"
 fi
 
