@@ -7,6 +7,8 @@ require 'calliper/minitest' if defined?(Minitest)
 
 module Calliper
   def self.enable!
+    return if server?
+
     application = Config.application || (::Rails.application if defined?(::Rails))
     raise "No application configured" unless application
 
