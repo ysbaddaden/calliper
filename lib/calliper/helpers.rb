@@ -4,6 +4,10 @@ module Calliper
       URI(driver.current_url)
     end
 
+    def sync
+      Calliper.wait_for_angular
+    end
+
     def present?(*args)
       if args.size == 1 && args.first.is_a?(Selenium::WebDriver::Element)
         args.first.displayed?
