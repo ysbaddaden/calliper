@@ -1,5 +1,9 @@
+require 'calliper/helpers'
+
 module Calliper
   class Page
+    include Helpers
+
     attr_writer :base_url
 
     def self.get(*args)
