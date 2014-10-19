@@ -56,7 +56,13 @@ module Selenium::WebDriver::SearchContext
       if script = Calliper::ClientSideScripts[:"find_by_#{how}"]
         context = is_a?(Selenium::WebDriver::Element) ? self : nil
         elements = Calliper.driver.execute_script(script, context, what)
-        name == 'find_element' ? elements.first : elements
+
+        if name == 'find_element'
+          return elements.first unless elements.nil? || elements.empty?
+          raise Selenium::WebDriver::Error::NoSuchElementError, "cannot locate element with #{how}: #{what}"
+        end
+
+        elements
       else
         __send__("#{name}_without_angular", *args)
       end
